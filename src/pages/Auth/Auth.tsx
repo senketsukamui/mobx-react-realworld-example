@@ -1,11 +1,42 @@
 import React, { FunctionComponent } from "react";
-import { Link, useMatch } from "react-router-dom";
+import { Link, useMatch, useNavigate } from "react-router-dom";
 import { Field, Form, Formik } from "formik";
+import { transport } from "@/stores/transport";
 
 const Auth: FunctionComponent = () => {
   const isRegisterPage = useMatch("/register");
+  const navigate = useNavigate();
+  const authInitialValues = { email: "", password: "" };
 
-  const loginInitialValues = { email: "", password: "" };
+  async function onSubmit(values, actions) {
+    try {
+      let requestData = {};
+
+      if (isRegisterPage) {
+        const response = transport.authTransport.register(
+          values.email,
+          values.password,
+          values.username
+        );
+
+        console.log(response);
+
+        // requestData = data;
+      } else {
+        const response = transport.authTransport.login(
+          values.email,
+          values.password
+        );
+
+        console.log(response);
+      }
+
+      navigate("/");
+    } catch (error) {
+      console.log(error);
+    }
+  }
+
   return (
     <div className="auth-page">
       <div className="container page">
@@ -20,11 +51,11 @@ const Auth: FunctionComponent = () => {
               </Link>
             </p>
             <Formik
-              onSubmit={() => {}}
+              onSubmit={onSubmit}
               initialValues={
                 isRegisterPage
-                  ? { ...loginInitialValues, username: "" }
-                  : loginInitialValues
+                  ? { ...authInitialValues, username: "" }
+                  : authInitialValues
               }
             >
               {({ isSubmitting }) => (
