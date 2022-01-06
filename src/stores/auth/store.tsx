@@ -42,7 +42,7 @@ class AuthStore {
     return transport.authTransport
       .register(email, password, username)
       .then((response) => {
-        console.log(response);
+        SessionStore.setToken(response.data.user.token);
       })
       .finally(() => {
         this.loading = false;
