@@ -1,5 +1,6 @@
 import { makeAutoObservable } from "mobx";
 import { transport } from "../transport";
+import SessionStore from "../session";
 
 interface IFormValues {
   username: string;
@@ -24,25 +25,27 @@ class AuthStore {
     this.formValues[field] = value;
   }
 
-  public login() {
+  public login(email: string, password: string) {
     this.loading = true;
-    transport.authTransport
-      .login(this.formValues.email, this.formValues.password)
+    return transport.authTransport
+      .login(email, password)
       .then((response) => {
-        console.log(response);
+        SessionStore.setToken(response.data.user.token);
+      })
+      .finally(() => {
+        this.loading = false;
       });
   }
 
-  public register() {
+  public register(email: string, password: string, username: string) {
     this.loading = true;
-    transport.authTransport
-      .register(
-        this.formValues.email,
-        this.formValues.password,
-        this.formValues.username
-      )
+    return transport.authTransport
+      .register(email, password, username)
       .then((response) => {
         console.log(response);
+      })
+      .finally(() => {
+        this.loading = false;
       });
   }
 
@@ -55,4 +58,4 @@ class AuthStore {
   }
 }
 
-export default AuthStore;
+export default new AuthStore();

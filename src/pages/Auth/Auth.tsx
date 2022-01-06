@@ -2,36 +2,36 @@ import React, { FunctionComponent } from "react";
 import { Link, useMatch, useNavigate } from "react-router-dom";
 import { Field, Form, Formik } from "formik";
 import { transport } from "@/stores/transport";
+import { useStores } from "@/useStores";
+import { observer } from "mobx-react";
+
+interface IFormValues {
+  email: string;
+  password: string;
+  username?: string;
+}
 
 const Auth: FunctionComponent = () => {
   const isRegisterPage = useMatch("/register");
   const navigate = useNavigate();
   const authInitialValues = { email: "", password: "" };
+  const { authStore, sessionStore } = useStores();
 
-  async function onSubmit(values, actions) {
+  console.log(sessionStore.token);
+
+  async function onSubmit(values: IFormValues) {
     try {
       let requestData = {};
 
       if (isRegisterPage) {
-        const response = transport.authTransport.register(
-          values.email,
-          values.password,
-          values.username
-        );
-
-        console.log(response);
-
-        // requestData = data;
+        authStore
+          .register(values.email, values.password, values.username || "")
+          .finally(() => navigate("/"));
       } else {
-        const response = transport.authTransport.login(
-          values.email,
-          values.password
-        );
-
-        console.log(response);
+        authStore
+          .login(values.email, values.password)
+          .finally(() => navigate("/"));
       }
-
-      navigate("/");
     } catch (error) {
       console.log(error);
     }
@@ -105,4 +105,4 @@ const Auth: FunctionComponent = () => {
   );
 };
 
-export default Auth;
+export default observer(Auth);
