@@ -1,0 +1,14 @@
+import { IUserProfile } from "../user/types";
+
+export interface IArticle {
+  author: IUserProfile;
+  body: string;
+  createdAt: string;
+  description: string;
+  favorited: boolean;
+  favoritesCount: number;
+  slug: string;
+  tagList: Array<string>;
+  title: string;
+  updatedAt: string;
+}

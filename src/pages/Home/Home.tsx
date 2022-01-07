@@ -1,6 +1,15 @@
+import ArticleList from "@/components/ArticleList";
+import { useStores } from "@/useStores";
+import { observer } from "mobx-react";
 import React, { FunctionComponent } from "react";
 
 const Home: FunctionComponent = () => {
+  const { articleStore } = useStores();
+
+  React.useEffect(() => {
+    articleStore.getArticles();
+  }, []);
+
   return (
     <div className="home-page">
       <div className="banner">
@@ -38,7 +47,7 @@ const Home: FunctionComponent = () => {
                 </li>
               </ul>
             </div>
-            {/* <ArticleList filters={filters} /> */}
+            <ArticleList articles={articleStore.articles} />
           </div>
           <div className="col-md-3">
             {/* <PopularTags onTagClick={onTagClick} /> */}
@@ -49,4 +58,4 @@ const Home: FunctionComponent = () => {
   );
 };
 
-export default Home;
+export default observer(Home);
