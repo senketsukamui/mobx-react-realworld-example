@@ -1,4 +1,5 @@
 import axios from "axios";
+import { IUpdateUserObject } from "../user/types";
 
 class UserTransport {
   static getUser() {
@@ -15,6 +16,10 @@ class UserTransport {
 
   static unfollowUser(nickname: string) {
     return axios.delete(`/profiles/${nickname}/follow`);
+  }
+
+  static updateUser(info: IUpdateUserObject) {
+    return axios.put("/user", { user: info });
   }
 }
 

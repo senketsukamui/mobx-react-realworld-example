@@ -1,15 +1,16 @@
 import { makeAutoObservable } from "mobx";
 import { transport } from "../transport";
-import { IUserInfo, IUserProfile } from "./types";
+import { IUpdateUserObject, IUserInfo, IUserProfile } from "./types";
 
+const initialUserInfo = {
+  bio: "",
+  email: "",
+  image: "",
+  token: "",
+  username: "",
+};
 class UserStore {
-  public user: IUserInfo = {
-    bio: "",
-    email: "",
-    image: "",
-    token: "",
-    username: "",
-  };
+  public user: IUserInfo = initialUserInfo;
 
   public userInfo: IUserProfile = {
     bio: "",
@@ -22,6 +23,14 @@ class UserStore {
 
   constructor() {
     makeAutoObservable(this);
+  }
+
+  public setCurrentUser(info: IUserInfo) {
+    this.user = info;
+  }
+
+  public logoutUser() {
+    this.user = initialUserInfo;
   }
 
   public getUser(name: string) {
@@ -60,6 +69,16 @@ class UserStore {
       .unfollowUser(name)
       .then((response) => {
         this.userInfo = response.data.profile;
+      })
+      .finally(() => (this.loading = false));
+  }
+
+  public updateUser(info: IUpdateUserObject) {
+    this.loading = true;
+    return transport.userTransport
+      .updateUser(info)
+      .then((response) => {
+        this.user = response.data.user;
       })
       .finally(() => (this.loading = false));
   }

@@ -1,7 +1,9 @@
 import { makeAutoObservable, reaction } from "mobx";
 import axios from "axios";
+import UserStore from "../user";
 class SessionStore {
   public token = window.localStorage.getItem("token");
+  public loading: boolean = false;
 
   constructor() {
     makeAutoObservable(this);
@@ -21,6 +23,11 @@ class SessionStore {
         }
       }
     );
+  }
+
+  public logout() {
+    this.token = "";
+    UserStore.logoutUser();
   }
 
   public setToken(token: string) {

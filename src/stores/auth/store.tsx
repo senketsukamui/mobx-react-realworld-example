@@ -1,6 +1,7 @@
 import { makeAutoObservable } from "mobx";
 import { transport } from "../transport";
 import SessionStore from "../session";
+import UserStore from "../user";
 
 interface IFormValues {
   username: string;
@@ -31,6 +32,7 @@ class AuthStore {
       .login(email, password)
       .then((response) => {
         SessionStore.setToken(response.data.user.token);
+        UserStore.setCurrentUser(response.data.user);
       })
       .finally(() => {
         this.loading = false;
@@ -43,6 +45,7 @@ class AuthStore {
       .register(email, password, username)
       .then((response) => {
         SessionStore.setToken(response.data.user.token);
+        UserStore.setCurrentUser(response.data.user);
       })
       .finally(() => {
         this.loading = false;

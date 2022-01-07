@@ -1,7 +1,8 @@
 import { FunctionComponent } from "react";
 import Home from "@/pages/Home";
 import Auth from "@/pages/Auth";
-import UserProfile from "./pages/UserProfile";
+import UserProfile from "@/pages/UserProfile";
+import Settings from "@/pages/Settings";
 
 interface IRoute {
   path: string;
@@ -13,6 +14,7 @@ const routes: IRoute[] = [
   { path: "/register", component: Auth },
   { path: "/login", component: Auth },
   { path: "/@:user", component: UserProfile },
+  { path: "/settings", component: Settings },
 ];
 
 export default routes;

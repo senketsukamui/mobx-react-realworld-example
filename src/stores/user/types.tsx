@@ -12,3 +12,11 @@ export interface IUserProfile {
   username: string;
   following: false;
 }
+
+export interface IUpdateUserObject {
+  email?: string;
+  username?: string;
+  password?: string;
+  image?: string;
+  bio?: string;
+}
