@@ -1,10 +1,15 @@
 import React, { FunctionComponent } from "react";
 import cx from "clsx";
 import { Link } from "react-router-dom";
+import { useStores } from "@/useStores";
+import { observer } from "mobx-react";
 
 const Navbar: FunctionComponent = () => {
   const activeLink = ({ isActive }: { isActive: boolean }) =>
     isActive && "active";
+
+  const { sessionStore, userStore } = useStores();
+
   return (
     <nav className="navbar navbar-light">
       <div className="container">
@@ -17,7 +22,7 @@ const Navbar: FunctionComponent = () => {
               Home
             </Link>
           </li>
-          {true && (
+          {sessionStore.token && (
             <>
               <li className="nav-item">
                 <Link className={cx("nav-link", activeLink)} to="/editor">
@@ -32,7 +37,7 @@ const Navbar: FunctionComponent = () => {
                 </Link>
               </li>
               <li className="nav-item">
-                <Link className="nav-link" to={`/`}>
+                <Link className="nav-link" to={`/@${userStore.user.username}`}>
                   <img
                     style={{
                       width: 24,
@@ -40,13 +45,14 @@ const Navbar: FunctionComponent = () => {
                       marginRight: 4,
                       borderRadius: "50%",
                     }}
+                    src={userStore.user.image}
                   />
-                  User
+                  {userStore.user.username}
                 </Link>
               </li>
             </>
           )}
-          {true && (
+          {!sessionStore.token && (
             <>
               <li className="nav-item">
                 <Link className={cx("nav-link", activeLink)} to="/register">
@@ -66,4 +72,4 @@ const Navbar: FunctionComponent = () => {
   );
 };
 
-export default Navbar;
+export default observer(Navbar);

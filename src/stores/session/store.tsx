@@ -16,6 +16,7 @@ class SessionStore {
           ] = `Token ${this.token}`;
           window.localStorage.setItem("token", token);
         } else {
+          axios.defaults.headers.common["Authorization"] = "";
           window.localStorage.removeItem("token");
         }
       }
