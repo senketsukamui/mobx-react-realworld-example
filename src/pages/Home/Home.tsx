@@ -1,14 +1,39 @@
 import ArticleList from "@/components/ArticleList";
 import { useStores } from "@/useStores";
+import clsx from "clsx";
 import { observer } from "mobx-react";
 import React, { FunctionComponent } from "react";
+import { IArticleFilter } from "@/stores/article/types";
+
+const initialFilters = Object.freeze({
+  tag: "",
+  offset: null,
+  feed: false,
+});
 
 const Home: FunctionComponent = () => {
-  const { articleStore } = useStores();
+  const { articleStore, sessionStore } = useStores();
+
+  const [filters, setFilters] = React.useState<IArticleFilter>({
+    ...initialFilters,
+    feed: Boolean(sessionStore.token),
+  });
 
   React.useEffect(() => {
     articleStore.getArticles();
-  }, []);
+  }, [filters]);
+
+  const changeFilterTag = (tag: string) => {
+    setFilters({ ...filters, tag });
+  };
+
+  const setGlobalFeed = () => {
+    setFilters(initialFilters);
+  };
+
+  const setUserFeed = () => {
+    setFilters({ ...initialFilters, feed: true });
+  };
 
   return (
     <div className="home-page">
@@ -23,24 +48,26 @@ const Home: FunctionComponent = () => {
           <div className="col-md-9">
             <div className="feed-toggle">
               <ul className="nav nav-pills outline-active">
-                {/* {isAuth && (
+                {sessionStore.token && (
                   <li className="nav-item">
                     <button
-                      onClick={onFeedClick}
+                      onClick={setUserFeed}
                       type="button"
-                      className={classNames("nav-link", {
+                      className={clsx("nav-link", {
                         active: filters.feed,
                       })}
                     >
                       Your Feed
                     </button>
                   </li>
-                )} */}
+                )}
                 <li className="nav-item">
                   <button
                     type="button"
-                    className="nav-link"
-                    // onClick={onGlobalFeedClick}
+                    className={clsx("nav-link", {
+                      active: !filters.feed,
+                    })}
+                    onClick={setGlobalFeed}
                   >
                     Global Feed
                   </button>

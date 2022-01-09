@@ -12,3 +12,9 @@ export interface IArticle {
   title: string;
   updatedAt: string;
 }
+
+export interface IArticleFilter {
+  tag: string;
+  offset: number | null;
+  feed: boolean;
+}

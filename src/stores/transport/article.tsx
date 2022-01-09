@@ -1,7 +1,8 @@
 import axios from "axios";
+import { IArticleFilter } from "../article/types";
 
 class ArticleTransport {
-  static getArticles() {
+  static getArticles(filters: IArticleFilter) {
     return axios.get("/articles");
   }
 
